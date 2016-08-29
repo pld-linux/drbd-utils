@@ -1,12 +1,9 @@
-# TODO:
-# - working systemd service file
-
 Summary:	Setup tools and scripts for DRBD
 Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
 Version:	8.9.7
-Release:	0.2
+Release:	0.3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://www.drbd.org/download/drbd/utils/%{name}-%{version}.tar.gz
@@ -38,11 +35,12 @@ Narzędzie konfiguracyjne i skrypty startowe dla DRBD.
 Summary:	DRBD resource agents for a cluster setup
 Group:		Daemons
 Requires:	resource-agents
+Requires:   drbd-utils = %{version}-%{release}
 
 %description -n resource-agents-drbd
 DRBD resource agents for a cluster setup.
 
-%package -n bash-completion-drbd-utils
+%package -n bash-completion-drbd
 Summary:	bash-completion for drbd
 Summary(pl.UTF-8):	Bashowe uzupełnianie poleceń dla drbd
 Group:		Applications/Shells
@@ -51,16 +49,16 @@ Requires:	bash-completion
 BuildArch:	noarch
 %endif
 
-%description -n bash-completion-drbd-utils
+%description -n bash-completion-drbd
 This package provides bash-completion for drbd.
 
-%description -n bash-completion-drbd-utils -l pl.UTF-8
+%description -n bash-completion-drbd -l pl.UTF-8
 Ten pakiet dostarcza bashowe uzupełnianie poleceń dla drbd.
 
 %package -n drbd-xen
 Summary:	Xen block device management script for DRBD
 Group:		Applications/System
-Requires:	drbdsetup = %{version}-%{release}
+Requires:	drbd-utils = %{version}-%{release}
 Requires:	xen
 
 %description -n drbd-xen
@@ -103,10 +101,18 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 %groupadd -g 60 haclient
 
+%post
+export NORESTART="yes"
+%systemd_post drbd.service
+
+%preun
+%systemd_preun drbd.service
+
 %postun
 if [ "$1" = "0" ]; then
 	%groupremove haclient
 fi
+%systemd_reload
 
 %files
 %defattr(644,root,root,755)
@@ -117,6 +123,7 @@ fi
 %dir %{_sysconfdir}/drbd.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.d/global_common.conf
+%{systemdunitdir}/drbd.service
 #%{_mandir}/man[58]/*
 /lib/udev/rules.d/65-drbd.rules
 %dir /lib/drbd
@@ -134,7 +141,7 @@ fi
 %dir /usr/lib/ocf/resource.d/linbit
 %attr(755,root,root) /usr/lib/ocf/resource.d/linbit/*
 
-%files -n bash-completion-drbd-utils
+%files -n bash-completion-drbd
 %defattr(644,root,root,755)
 /etc/bash_completion.d/drbdadm
 

@@ -18,10 +18,10 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(postun):	/usr/sbin/groupdel
 Requires:	udev-core
 Provides:	group(haclient)
-Obsoletes:  drbdsetup
-Obsoletes:	drbdsetup8
 Obsoletes:	drbd-udev
-Conflicts:  drbdsetup
+Obsoletes:	drbdsetup
+Obsoletes:	drbdsetup8
+Conflicts:	drbdsetup
 Conflicts:	drbdsetup24
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -34,8 +34,8 @@ Narzędzie konfiguracyjne i skrypty startowe dla DRBD.
 %package -n resource-agents-drbd
 Summary:	DRBD resource agents for a cluster setup
 Group:		Daemons
+Requires:	drbd-utils = %{version}-%{release}
 Requires:	resource-agents
-Requires:   drbd-utils = %{version}-%{release}
 
 %description -n resource-agents-drbd
 DRBD resource agents for a cluster setup.
@@ -71,10 +71,10 @@ capable of promoting and demoting DRBD resources as necessary.
 %build
 %configure \
 	--with-initscripttype=systemd \
-    --with-udev \
-    --with-xen \
-    --with-pacemaker \
-    --with-bashcompletion
+	--with-udev \
+	--with-xen \
+	--with-pacemaker \
+	--with-bashcompletion
 
 %{__make} tools \
 	KVER=dummy \
@@ -85,7 +85,7 @@ capable of promoting and demoting DRBD resources as necessary.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man{5,8},%{_sysconfdir}} \
-	$RPM_BUILD_ROOT/etc/ha.d/resource.d \
+$RPM_BUILD_ROOT%{_sysconfdir}/ha.d/resource.d \
 	$RPM_BUILD_ROOT/var/lib/drbd
 
 %{__make} install \
@@ -93,8 +93,8 @@ install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man{5,8},%{_sysconfdir}} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # Hack for borked make install
-rm -f $RPM_BUILD_ROOT/usr/share/man/man8/drbd-overview.8
-ln -s $RPM_BUILD_ROOT/usr/share/man/man8/drbd-overview-9.0.8 drbd-overview.8
+rm -f $RPM_BUILD_ROOT%{_mandir}/man8/drbd-overview.8
+ln -s $RPM_BUILD_ROOT%{_mandir}/man8/drbd-overview-9.0.8 drbd-overview.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -118,9 +118,9 @@ fi
 %files
 %defattr(644,root,root,755)
 /sbin/*
-%attr(755,root,root) /usr/sbin/drbdadm
-%attr(4754,root,haclient) /usr/sbin/drbdsetup
-%attr(4754,root,haclient) /usr/sbin/drbdmeta
+%attr(755,root,root) %{_sbindir}/drbdadm
+%attr(4754,root,haclient) %{_sbindir}/drbdsetup
+%attr(4754,root,haclient) %{_sbindir}/drbdmeta
 %dir %{_sysconfdir}/drbd.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.d/global_common.conf
@@ -129,9 +129,9 @@ fi
 /lib/udev/rules.d/65-drbd.rules
 %dir /lib/drbd
 %attr(755,root,root) /lib/drbd/*
-/usr/lib/tmpfiles.d/drbd.conf
-%dir /usr/lib/drbd
-%attr(755,root,root) /usr/lib/drbd/*
+%{systemdtmpfilesdir}/drbd.conf
+%dir %{_prefix}/lib/drbd
+%attr(755,root,root) %{_prefix}/lib/drbd/*
 %attr(755,root,root) %{_sbindir}/drbd-overview
 %attr(750,root,root) %dir /var/lib/drbd
 
@@ -139,8 +139,8 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_sysconfdir}/ha.d/resource.d/drbddisk
 %attr(755,root,root) %{_sysconfdir}/ha.d/resource.d/drbdupper
-%dir /usr/lib/ocf/resource.d/linbit
-%attr(755,root,root) /usr/lib/ocf/resource.d/linbit/*
+%dir %{_prefix}/lib/ocf/resource.d/linbit
+%attr(755,root,root) %{_prefix}/lib/ocf/resource.d/linbit/*
 
 %files -n bash-completion-drbd
 %defattr(644,root,root,755)
@@ -148,4 +148,4 @@ fi
 
 %files -n drbd-xen
 %defattr(644,root,root,755)
-/etc/xen/scripts/block-drbd
+%{_sysconfdir}/xen/scripts/block-drbd

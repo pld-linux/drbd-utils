@@ -3,7 +3,7 @@ Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
 Version:	8.9.7
-Release:	0.3
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://www.drbd.org/download/drbd/utils/%{name}-%{version}.tar.gz
@@ -92,8 +92,9 @@ install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man{5,8},%{_sysconfdir}} \
 	DRBD_ENABLE_UDEV=1 \
 	DESTDIR=$RPM_BUILD_ROOT
 
-#TODO
-rm -rf $RPM_BUILD_ROOT/usr/share/man
+# Hack for borked make install
+rm -f $RPM_BUILD_ROOT/usr/share/man/man8/drbd-overview.8
+ln -s $RPM_BUILD_ROOT/usr/share/man/man8/drbd-overview-9.0.8 drbd-overview.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -124,7 +125,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/drbd.d/global_common.conf
 %{systemdunitdir}/drbd.service
-#%{_mandir}/man[58]/*
+%{_mandir}/man[58]/*
 /lib/udev/rules.d/65-drbd.rules
 %dir /lib/drbd
 %attr(755,root,root) /lib/drbd/*

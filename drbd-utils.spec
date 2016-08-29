@@ -3,7 +3,7 @@ Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
 Version:	8.9.7
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://www.drbd.org/download/drbd/utils/%{name}-%{version}.tar.gz
@@ -70,7 +70,7 @@ capable of promoting and demoting DRBD resources as necessary.
 
 %build
 %configure \
-	--with-initdir=/etc/rc.d/init.d \
+	--with-initscripttype=systemd \
     --with-udev \
     --with-xen \
     --with-pacemaker \

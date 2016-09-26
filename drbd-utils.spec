@@ -3,7 +3,7 @@ Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
 Version:	8.9.7
-Release:	3
+Release:	4
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://www.drbd.org/download/drbd/utils/%{name}-%{version}.tar.gz
@@ -128,7 +128,9 @@ fi
 %{_mandir}/man[58]/*
 /lib/udev/rules.d/65-drbd.rules
 %dir /lib/drbd
-%attr(755,root,root) /lib/drbd/*
+%attr(755,root,root) /lib/drbd/drbd
+%attr(4754,root,haclient) /lib/drbd/drbdadm-*
+%attr(4754,root,haclient) /lib/drbd/drbdsetup-*
 %{systemdtmpfilesdir}/drbd.conf
 %dir %{_prefix}/lib/drbd
 %attr(755,root,root) %{_prefix}/lib/drbd/*

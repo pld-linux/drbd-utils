@@ -2,12 +2,12 @@ Summary:	Setup tools and scripts for DRBD
 Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
-Version:	8.9.7
-Release:	4
+Version:	9.1.0
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://www.drbd.org/download/drbd/utils/%{name}-%{version}.tar.gz
-# Source0-md5:	f2216346f8e77f352fb306ab357a8484
+# Source0-md5:	6d37a45b0c5af451b6bceb10a91187ec
 URL:		http://www.drbd.org/
 BuildRequires:	bison
 BuildRequires:	flex

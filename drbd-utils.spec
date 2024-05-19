@@ -2,14 +2,13 @@ Summary:	Setup tools and scripts for DRBD
 Summary(pl.UTF-8):	Narzędzie konfiguracyjne i skrypty dla DRBD
 Summary(pt_BR.UTF-8):	Utilitários para gerenciar dispositivos DRBD
 Name:		drbd-utils
-Version:	9.27.0
+Version:	9.28.0
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 #Source0Download: https://linbit.com/linbit-software-download-page-for-linstor-and-drbd-linux-driver/
 Source0:	https://pkg.linbit.com/downloads/drbd/utils/%{name}-%{version}.tar.gz
-# Source0-md5:	d440bd8b9639b0e27f592ab598206273
-Patch0:		%{name}-udev.patch
+# Source0-md5:	82a8926674de8fd6c3f8305d27a36975
 URL:		http://www.drbd.org/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake
@@ -84,7 +83,6 @@ DRBD, potrafiący w razie potrzeby promować i degradować zasoby DRBD.
 
 %prep
 %setup -q
-%patch0 -p1
 
 # make constistent with configure settings (DRBD_RUN_DIR)
 %{__sed} -i -e 's, /run/, /var/run/,' scripts/drbd.tmpfiles.conf
@@ -94,6 +92,7 @@ DRBD, potrafiący w razie potrzeby promować i degradować zasoby DRBD.
 %{__autoconf}
 %{__autoheader}
 %configure \
+	--disable-udevchecks \
 	--with-bashcompletion \
 	--with-initscripttype=systemd \
 	--with-pacemaker \
@@ -172,7 +171,6 @@ fi
 %attr(750,root,root) %dir /var/lib/drbd
 %attr(700,root,root) %dir /var/run/drbd
 %{_mandir}/man5/drbd.conf.5*
-%{_mandir}/man5/drbd.conf-8.3.5*
 %{_mandir}/man5/drbd.conf-8.4.5*
 %{_mandir}/man5/drbd.conf-9.0.5*
 %{_mandir}/man7/drbd.service.7*
@@ -184,23 +182,18 @@ fi
 %{_mandir}/man7/drbd@.service.7*
 %{_mandir}/man7/drbd@.target.7*
 %{_mandir}/man8/drbd.8*
-%{_mandir}/man8/drbd-8.3.8*
 %{_mandir}/man8/drbd-8.4.8*
 %{_mandir}/man8/drbd-9.0.8*
 %{_mandir}/man8/drbdadm.8*
-%{_mandir}/man8/drbdadm-8.3.8*
 %{_mandir}/man8/drbdadm-8.4.8*
 %{_mandir}/man8/drbdadm-9.0.8*
-%{_mandir}/man8/drbddisk-8.3.8*
 %{_mandir}/man8/drbddisk-8.4.8*
 %{_mandir}/man8/drbdmeta.8*
-%{_mandir}/man8/drbdmeta-8.3.8*
 %{_mandir}/man8/drbdmeta-8.4.8*
 %{_mandir}/man8/drbdmeta-9.0.8*
 %{_mandir}/man8/drbdmon.8*
 %{_mandir}/man8/drbdmon-9.0.8*
 %{_mandir}/man8/drbdsetup.8*
-%{_mandir}/man8/drbdsetup-8.3.8*
 %{_mandir}/man8/drbdsetup-8.4.8*
 %{_mandir}/man8/drbdsetup-9.0.8*
 %lang(ja) %{_mandir}/ja/man5/drbd.conf.5*
